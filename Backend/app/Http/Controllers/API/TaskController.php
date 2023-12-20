@@ -89,4 +89,12 @@ class TaskController extends Controller
 
         return response()->json(['tasks' => $tasks]);
     }
+
+    public function filterByStatus(Request $request)
+    {
+        $status = $request->input('status');
+        $tasks = Task::where('status', $status)->get();
+
+        return response()->json(['tasks' => $tasks]);
+    }
 }
