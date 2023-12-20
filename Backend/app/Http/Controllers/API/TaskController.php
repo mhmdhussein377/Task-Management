@@ -81,4 +81,12 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Task deleted successfully']);
     }
+
+    public function filterByDueDate(Request $request)
+    {
+        $dueDate = $request->input('due_date');
+        $tasks = Task::where('due_date', $dueDate)->get();
+
+        return response()->json(['tasks' => $tasks]);
+    }
 }
