@@ -43,4 +43,29 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Task created successfully', 'task' => $task]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'due_date' => 'required|date',
+            'status' => 'required|in:in_progress,finished,partial',
+        ]);
+
+        $task = Task::find($id);
+
+        if (!$task) {
+            return response()->json(['message' => 'Task not found'], 404);
+        }
+
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'due_date' => $request->due_date,
+            'status' => $request->status,
+        ]);
+
+        return response()->json(['message' => 'Task updated successfully', 'task' => $task]);
+    }
 }
