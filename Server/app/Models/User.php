@@ -21,7 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
     ];
 
     /**
@@ -34,11 +33,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function tasks()
-    {
-        return $this->hasMany(Task::class);
-    }
-
     /**
      * The attributes that should be cast.
      *
@@ -48,4 +42,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }
