@@ -15,6 +15,6 @@ Route::get('tasks/{id}', 'TaskController@show');
 Route::get('tasks/filter-by-due-date', 'TaskController@filterByDueDate');
 Route::get('tasks/filter-by-status', 'TaskController@filterByStatus');
 
-Route::post('tasks', 'TaskController@store')->middleware('role:employer');
-Route::put('tasks/{id}', 'TaskController@update')->middleware('role:employer');
-Route::delete('tasks/{id}', 'TaskController@destroy')->middleware('role:employer');
+Route::post('tasks', 'TaskController@store')->middleware('employer');
+Route::put('tasks/{id}', 'TaskController@update')->middleware('employer');
+Route::delete('tasks/{id}', 'TaskController@destroy')->middleware('employer');

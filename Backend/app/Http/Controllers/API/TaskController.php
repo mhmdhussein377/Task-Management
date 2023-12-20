@@ -24,4 +24,23 @@ class TaskController extends Controller
 
         return response()->json(['task' => $task]);
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'due_date' => 'required|date',
+            'status' => 'required|in:in_progress,finished,partial',
+        ]);
+
+        $task = Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'due_date' => $request->due_date,
+            'status' => $request->status,
+        ]);
+
+        return response()->json(['message' => 'Task created successfully', 'task' => $task]);
+    }
 }
