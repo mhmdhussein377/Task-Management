@@ -18,10 +18,12 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
+    // $dueDate = Carbon::parse($request->due_date);
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**

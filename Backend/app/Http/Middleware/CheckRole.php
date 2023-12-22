@@ -8,9 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && $request->user()->role === $role) {
+        if ($request->user() && $request->user()->role === "employer") {
             return $next($request);
         }
 
