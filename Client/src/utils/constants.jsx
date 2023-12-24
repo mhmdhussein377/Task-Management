@@ -1,3 +1,6 @@
+import {GiBackwardTime} from 'react-icons/gi';
+import {AiOutlinePlus} from 'react-icons/ai';
+
 export const loginInputFields = [
     {
         label: "Email",
@@ -39,4 +42,16 @@ export const roles = [
         id: 2,
         label: "Employee"
     },
+];
+
+export const getCircularButtons = (toggleCompletedFn, openCreateTodoModalFn) => [
+    {
+        id: 1,
+        icon: <GiBackwardTime size={25} color="white"/>,
+        handleClick: toggleCompletedFn
+    }, {
+        id: 2,
+        icon: <AiOutlinePlus size={25} color="white"/>,
+        handleClick: openCreateTodoModalFn
+    }
 ];

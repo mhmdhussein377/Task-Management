@@ -1,0 +1,9 @@
+.todos {
+    display: flex;
+    flex-direction: column;
+}
+
+.todos h2 {
+    margin-bottom: .3125rem;
+    font-size: 1.5rem;
+}

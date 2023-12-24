@@ -1,0 +1,83 @@
+.home-screen {
+    background-color: #1242f050;
+    padding: 0 20px;
+    min-height: 100vh;
+}
+
+.scrollbar-hide {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.home-screen .todos-section {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    width: 100%;
+    max-width: 650px;
+    margin: auto;
+    padding: 5rem 0 1.875rem;
+}
+
+.home-screen .todos-section .search-input {
+    font-size: 1rem;
+    padding: 10px 12px;
+    border: 2px solid #1242f085;
+    border-radius: 5px;
+    outline: none;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+.home-screen .todos-section .search-input:focus {
+    border: 2px solid #1243f0;;
+}
+
+.home-screen > .action-buttons {
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    bottom: 40px;
+    padding-right: 60px;
+    padding-left: 20px;
+}
+
+.home-screen > .action-buttons .flex {
+    display: flex;
+    gap: 15px;
+}
+
+@media (max-width: 500px) {
+
+    .home-screen > .action-buttons {
+        bottom: 20px;
+        padding-left: 0;
+        padding-right: 40px;
+    }
+}
+@media (max-width: 1000px) {
+
+    .home-screen .todos-section {
+        padding: 2rem 0 1.875rem;
+        max-height: 85vh;
+        overflow: scroll;
+        scroll-behavior: smooth;
+    }
+
+}
