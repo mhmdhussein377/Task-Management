@@ -11,6 +11,9 @@ import {PiSignOutBold} from "react-icons/pi";
 import "./index.css"
 import CreateTodo from "../../components/CreateTodo/CreateTodo";
 import DeleteTodoModal from "../../components/DeleteTodoModal/DeleteTodoModal";
+import UpdateTodoModal from "../../components/UpdateTodoModal/UpdateTodoModal";
+import { GiBackwardTime } from "react-icons/gi";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const Home = () => {
 
@@ -36,7 +39,7 @@ const Home = () => {
     const [shouldFetchTodos,
         setShouldFetchTodos] = useState(true);
     const navigate = useNavigate();
-    const {logout} = useAuth();
+    const {logout, user} = useAuth();
 
     useEffect(() => {
         const getTodos = async() => {
@@ -52,9 +55,6 @@ const Home = () => {
 
     useEffect(() => {
 
-        console.log(debouncedValue, "dev")
-        console.log(searchTodos, todos, "todoooo")
-
         if (!debouncedValue) {
             setSearchedTodos([]);
             return;
@@ -64,7 +64,6 @@ const Home = () => {
             console.log(todo, "updated")
             return todo.title.toLowerCase().includes(debouncedValue.toLowerCase()) || todo.description.toLowerCase().includes(debouncedValue.toLowerCase())
         })
-        console.log(filteredTodos, "filt")
         setTodos(filteredTodos)
     }, [debouncedValue, searchTerm]);
 
@@ -99,6 +98,8 @@ const Home = () => {
 
         return groupedTasks;
     };
+
+    console.log(user, "user")
 
     return (
         <div className="home-screen">
@@ -139,7 +140,8 @@ const Home = () => {
                 }
                 color = "white" />}/>
                 <div className="flex">
-                    {circularButtons.map(({id, icon, handleClick}) => (<CircularButton key={id} onClick={handleClick} icon={icon}/>))}
+                    <CircularButton onClick={handleToggleCompleted} icon={<GiBackwardTime size={25} color="white"/>} />
+                    {user.role === "employer" && <CircularButton onClick={handleOpenCreateTodoModal} icon={<AiOutlinePlus size={25} color="white"/>} />}
                 </div>
             </div>
             {isCreateTodoModalOpened && (<CreateTodo
@@ -150,10 +152,10 @@ const Home = () => {
                 setDeleteTodoId={setDeleteTodoId}
                 setShouldFetchTodos={setShouldFetchTodos}
                 setIsDeleteTodoModalOpened={setIsDeleteTodoModalOpened}/>)}
-            {/* {isUpdateTodoModalOpened && (<UpdateTodoModal
+            {isUpdateTodoModalOpened && (<UpdateTodoModal
                 setIsUpdateTodoModalOpened={setIsUpdateTodoModalOpened}
                 updatedTodo={udpatedTodo}
-                setShouldFetchTodos={setShouldFetchTodos}/>)} */}
+                setShouldFetchTodos={setShouldFetchTodos}/>)}
         </div>
     )
 }

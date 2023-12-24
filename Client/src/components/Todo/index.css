@@ -31,10 +31,6 @@
     font-weight: 500;
 }
 
-.todo > div:first-of-type div:last-of-type {
-    cursor: pointer;
-}
-
 .todo > div:last-of-type {
     display: flex;
     justify-content: space-between;
