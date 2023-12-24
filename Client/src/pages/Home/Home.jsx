@@ -10,6 +10,7 @@ import {getCircularButtons} from "../../utils/constants";
 import {PiSignOutBold} from "react-icons/pi";
 import "./index.css"
 import CreateTodo from "../../components/CreateTodo/CreateTodo";
+import DeleteTodoModal from "../../components/DeleteTodoModal/DeleteTodoModal";
 
 const Home = () => {
 
@@ -144,12 +145,12 @@ const Home = () => {
             {isCreateTodoModalOpened && (<CreateTodo
                 setIsCreateTodoModalOpened={setIsCreateTodoModalOpened}
                 setShouldFetchTodos={setShouldFetchTodos}/>)}
-            {/* {isDeleteTodoModalOpened && (<DeleteTodoModal
+            {isDeleteTodoModalOpened && (<DeleteTodoModal
                 deleteTodoId={deleteTodoId}
                 setDeleteTodoId={setDeleteTodoId}
                 setShouldFetchTodos={setShouldFetchTodos}
                 setIsDeleteTodoModalOpened={setIsDeleteTodoModalOpened}/>)}
-            {isUpdateTodoModalOpened && (<UpdateTodoModal
+            {/* {isUpdateTodoModalOpened && (<UpdateTodoModal
                 setIsUpdateTodoModalOpened={setIsUpdateTodoModalOpened}
                 updatedTodo={udpatedTodo}
                 setShouldFetchTodos={setShouldFetchTodos}/>)} */}
