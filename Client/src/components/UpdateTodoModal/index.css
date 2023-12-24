@@ -1,0 +1,7 @@
+.update-todo.employee form {
+    max-width: 360px;
+}
+
+.update-todo.employee form .full-status {
+    width: 100% !important;
+}

@@ -1,7 +1,7 @@
 import "./index.css"
 import {BiSolidPencil} from "react-icons/bi"
 import {BsTrashFill} from "react-icons/bs"
-import { useAuth } from "../../Context/AuthContext"
+import {useAuth} from "../../Context/AuthContext"
 
 const Todo = ({todo, setIsDeleteTodoModalOpened, setDeleteTodoId, setIsUpdateTodoModalOpened, setUpdatedTodo}) => {
 
@@ -17,7 +17,7 @@ const Todo = ({todo, setIsDeleteTodoModalOpened, setDeleteTodoId, setIsUpdateTod
         setIsDeleteTodoModalOpened(true);
         setDeleteTodoId(id)
     }
-    
+
     return (
         <div className="todo">
             <div>
@@ -31,13 +31,16 @@ const Todo = ({todo, setIsDeleteTodoModalOpened, setDeleteTodoId, setIsUpdateTod
             <div>
                 <div className="content">{description}</div>
                 {user.role === "employer" && <div className="icons">
-                    <div
-                        onClick={handleEditIconClick}>
-                        <BiSolidPencil size={25} color="black"/>
+                    <div onClick={handleEditIconClick}>
+                        <BiSolidPencil size={25} color="white"/>
                     </div>
-                    <div
-                        onClick={handleDeleteIconClick}>
-                        <BsTrashFill size={25} color="black"/>
+                    <div onClick={handleDeleteIconClick}>
+                        <BsTrashFill size={25} color="white"/>
+                    </div>
+                </div>}
+                {user.role === "employee" && <div className="icons">
+                    <div onClick={handleEditIconClick}>
+                        <BiSolidPencil size={25} color="white"/>
                     </div>
                 </div>}
             </div>

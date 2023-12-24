@@ -1,6 +1,7 @@
 .todos {
     display: flex;
     flex-direction: column;
+    z-index: 5;
 }
 
 .todos h2 {
