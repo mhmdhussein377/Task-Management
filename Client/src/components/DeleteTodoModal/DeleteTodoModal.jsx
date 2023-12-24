@@ -15,7 +15,7 @@ const DeleteTodoModal = ({setDeleteTodoId, setIsDeleteTodoModalOpened, deleteTod
 
     const handleDeleteTodo = async () => {
         try {
-            const response = await deleteRequest(`/todos/${deleteTodoId}/delete`)
+            const response = await deleteRequest(`/tasks/${deleteTodoId}`)
             response && setIsDeleteTodoModalOpened(false)
             response && setShouldFetchTodos(true)
         } catch (error) {
