@@ -51,8 +51,6 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
             return
         }
 
-        console.log(inputs)
-
         try {
 
             const formattedDate = inputs.due_date.toISOString().slice(0, 19).replace("T", " ");

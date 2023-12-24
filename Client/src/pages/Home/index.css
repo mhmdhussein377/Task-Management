@@ -63,6 +63,16 @@
     gap: 15px;
 }
 
+.home-screen .filter {
+    display: flex;
+    gap: 1rem;
+}
+
+.home-screen .filter > input {
+    flex-grow: 1;
+    align-items: flex-end;
+}
+
 @media (max-width: 500px) {
 
     .home-screen > .action-buttons {

@@ -6,13 +6,16 @@ import {getRequest} from "../../utils/requests";
 import CircularButton from "./../../components/UI/CircularButton/CircularButton"
 import Todos from "../../components/Todos/Todos";
 import Todo from "../../components/Todo/Todo";
-import {getCircularButtons} from "../../utils/constants";
+import {taskStatus} from "../../utils/constants";
 import {PiSignOutBold} from "react-icons/pi";
 import "./index.css"
 import CreateTodo from "../../components/CreateTodo/CreateTodo";
 import DeleteTodoModal from "../../components/DeleteTodoModal/DeleteTodoModal";
 import UpdateTodoModal from "../../components/UpdateTodoModal/UpdateTodoModal";
-import { GiBackwardTime } from "react-icons/gi";
+import SelectSearch from "react-select-search"
+
+import "react-datepicker/dist/react-datepicker.css";
+import 'react-select-search/style.css'
 import { AiOutlinePlus } from "react-icons/ai";
 
 const Home = () => {
@@ -23,10 +26,9 @@ const Home = () => {
         setIsDeleteTodoModalOpened] = useState(false);
     const [isUpdateTodoModalOpened,
         setIsUpdateTodoModalOpened] = useState(false);
+    const [selectedFilterStatus, setSelectedFilterStatus] = useState("Select Status")
     const [todos,
         setTodos] = useState([]);
-    const [showCompleted,
-        setShowCompleted] = useState(false);
     const [searchTerm,
         setSearchTerm] = useState("");
     const [debouncedValue] = useDebounce(searchTerm, 500);
@@ -55,33 +57,45 @@ const Home = () => {
 
     useEffect(() => {
 
-        if (!debouncedValue) {
+        let filteredTasks = []
+
+        if (!debouncedValue && selectedFilterStatus === "Select Status") {
             setSearchedTodos([]);
             return;
         }
 
-        const filteredTodos = todos.filter(todo => {
-            console.log(todo, "updated")
-            return todo.title.toLowerCase().includes(debouncedValue.toLowerCase()) || todo.description.toLowerCase().includes(debouncedValue.toLowerCase())
-        })
-        setTodos(filteredTodos)
-    }, [debouncedValue, searchTerm]);
+        if (debouncedValue && selectedFilterStatus !== "Select Status") {
+            filteredTasks = todos.filter(todo =>
+                todo.status === selectedFilterStatus &&
+                (todo.due_date.includes(debouncedValue) ||
+                todo.title.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+                todo.description.toLowerCase().includes(debouncedValue.toLowerCase()))
+            );
+        } else if (!debouncedValue && selectedFilterStatus !== "Select Status") {
+            filteredTasks = todos.filter(todo => todo.status === selectedFilterStatus);
+        } else if (debouncedValue && selectedFilterStatus === "Select Status") {
+            filteredTasks = todos.filter(todo =>
+                todo.due_date.includes(debouncedValue) ||
+                todo.title.toLowerCase().includes(debouncedValue.toLowerCase()) ||
+                todo.description.toLowerCase().includes(debouncedValue.toLowerCase())
+            );
+        }
+
+        setSearchedTodos(filteredTasks)
+    }, [debouncedValue, searchTerm, selectedFilterStatus]);
 
     const handleOpenCreateTodoModal = () => {
         setIsCreateTodoModalOpened(true);
     };
 
-    const handleToggleCompleted = () => {
-        setShowCompleted((prevShowCompleted) => !prevShowCompleted);
-        setShouldFetchTodos(true);
-    };
-
-    const circularButtons = getCircularButtons(handleToggleCompleted, handleOpenCreateTodoModal);
-
     const handleSignout = () => {
         logout();
         navigate("/login");
     };
+
+    const handleStatusChange = (newValue) => {
+        setSelectedFilterStatus(newValue)
+    }
 
     const groupTasksByDate = (tasks) => {
         const groupedTasks = {};
@@ -99,17 +113,26 @@ const Home = () => {
         return groupedTasks;
     };
 
-    console.log(user, "user")
-
     return (
         <div className="home-screen">
             <div className="todos-section scrollbar-hide">
-                <input
-                    className="search-input"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    type="text"
-                    placeholder="Search for todos"/> {searchTodos.length > 0
+                <div className="filter">
+                    <input
+                        className="search-input"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        type="text"
+                        placeholder="Search for todos"/>
+                    <div className="status-filter">
+                        <div className="input-container priority">
+                            <SelectSearch
+                                onChange={handleStatusChange}
+                                options={[{name: "Select Status", value: "Select Status"}, ...taskStatus]}
+                                value={selectedFilterStatus}/>
+                        </div>
+                    </div>
+                </div>
+                    {searchTodos.length > 0
                     ? searchTodos.map((todo, index) => (<Todo
                         key={index}
                         todo={todo}
@@ -140,7 +163,6 @@ const Home = () => {
                 }
                 color = "white" />}/>
                 <div className="flex">
-                    <CircularButton onClick={handleToggleCompleted} icon={<GiBackwardTime size={25} color="white"/>} />
                     {user.role === "employer" && <CircularButton onClick={handleOpenCreateTodoModal} icon={<AiOutlinePlus size={25} color="white"/>} />}
                 </div>
             </div>

@@ -8,19 +8,6 @@ const Todo = ({todo, setIsDeleteTodoModalOpened, setDeleteTodoId, setIsUpdateTod
     const {title, description, status, id} = todo
     const {user} = useAuth()
 
-    console.log(user, "user")
-
-    // const handleCompleted = async() => {
-    //     setIsCompleted(prev => !prev)
-    //     try {
-    //         await updateRequest(`/todos/${id}/update`, {
-    //             completed: !isCompleted
-    //         })
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
     const handleEditIconClick = () => {
         setIsUpdateTodoModalOpened(true);
         setUpdatedTodo(todo)
