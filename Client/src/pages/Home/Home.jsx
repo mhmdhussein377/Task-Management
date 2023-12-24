@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {useDebounce} from "use-debounce";
 import {useNavigate} from "react-router-dom";
-import { useAuth } from "../../Context/AuthContext";
+import {useAuth} from "../../Context/AuthContext";
 import {getRequest} from "../../utils/requests";
 import CircularButton from "./../../components/UI/CircularButton/CircularButton"
 import Todos from "../../components/Todos/Todos";
@@ -9,6 +9,7 @@ import Todo from "../../components/Todo/Todo";
 import {getCircularButtons} from "../../utils/constants";
 import {PiSignOutBold} from "react-icons/pi";
 import "./index.css"
+import CreateTodo from "../../components/CreateTodo/CreateTodo";
 
 const Home = () => {
 
@@ -20,7 +21,8 @@ const Home = () => {
         setIsUpdateTodoModalOpened] = useState(false);
     const [todos,
         setTodos] = useState([]);
-    const [showCompleted, setShowCompleted] = useState(false);
+    const [showCompleted,
+        setShowCompleted] = useState(false);
     const [searchTerm,
         setSearchTerm] = useState("");
     const [debouncedValue] = useDebounce(searchTerm, 500);
@@ -38,8 +40,7 @@ const Home = () => {
     useEffect(() => {
         const getTodos = async() => {
             const response = await getRequest("/tasks");
-            console.log(response, "response")
-            setTodos(response);
+            setTodos(response.tasks);
         };
 
         if (shouldFetchTodos) {
@@ -49,19 +50,21 @@ const Home = () => {
     }, [shouldFetchTodos]);
 
     useEffect(() => {
+
+        console.log(debouncedValue, "dev")
+        console.log(searchTodos, todos, "todoooo")
+
         if (!debouncedValue) {
             setSearchedTodos([]);
             return;
         }
 
-        const getTodos = async() => {
-            const response = await getRequest("/todos");
-
-            const filteredTodos = 
-
-            setSearchedTodos(filteredTodos);
-        };
-        getTodos();
+        const filteredTodos = todos.filter(todo => {
+            console.log(todo, "updated")
+            return todo.title.toLowerCase().includes(debouncedValue.toLowerCase()) || todo.description.toLowerCase().includes(debouncedValue.toLowerCase())
+        })
+        console.log(filteredTodos, "filt")
+        setTodos(filteredTodos)
     }, [debouncedValue, searchTerm]);
 
     const handleOpenCreateTodoModal = () => {
@@ -80,6 +83,22 @@ const Home = () => {
         navigate("/login");
     };
 
+    const groupTasksByDate = (tasks) => {
+        const groupedTasks = {};
+
+        tasks.forEach((task) => {
+            const dueDate = task.due_date;
+
+            if (!groupedTasks[dueDate]) {
+                groupedTasks[dueDate] = [];
+            }
+
+            groupedTasks[dueDate].push(task);
+        });
+
+        return groupedTasks;
+    };
+
     return (
         <div className="home-screen">
             <div className="todos-section scrollbar-hide">
@@ -96,13 +115,13 @@ const Home = () => {
                         setIsDeleteTodoModalOpened={setIsDeleteTodoModalOpened}
                         setUpdatedTodo={setUpdatedTodo}
                         setIsUpdateTodoModalOpened={setIsUpdateTodoModalOpened}/>))
-                    : (Object.entries(todos).length === 0
+                    : (todos.length === 0
                         ? <div>
-                            <h2>Your to-do list is as empty as a Monday morning. </h2>
-                            <h3>Add a new to-do and let the
-                                productivity party begin! 🚀</h3>
-                        </div>
-                        : Object.entries(todos).map(([date, tasksForDate]) => (<Todos
+                                <h2>Your to-do list is as empty as a Monday morning.
+                                </h2>
+                                <h3>Add a new to-do and let the productivity party begin! 🚀</h3>
+                            </div>
+                        : Object.entries(groupTasksByDate(todos)).map(([date, tasksForDate]) => (<Todos
                             key={date}
                             date={date}
                             todos={tasksForDate}
@@ -122,7 +141,7 @@ const Home = () => {
                     {circularButtons.map(({id, icon, handleClick}) => (<CircularButton key={id} onClick={handleClick} icon={icon}/>))}
                 </div>
             </div>
-            {isCreateTodoModalOpened && (<CreateToDo
+            {isCreateTodoModalOpened && (<CreateTodo
                 setIsCreateTodoModalOpened={setIsCreateTodoModalOpened}
                 setShouldFetchTodos={setShouldFetchTodos}/>)}
             {/* {isDeleteTodoModalOpened && (<DeleteTodoModal

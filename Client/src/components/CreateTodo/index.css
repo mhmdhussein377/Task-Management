@@ -1,0 +1,64 @@
+.create-todo, .update-todo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.create-todo form, .update-todo form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    max-width: 650px;
+    padding: 30px;
+    background-color: white;
+}
+
+.create-todo form .inputs, .update-todo form .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.create-todo form .inputs .w-50, .update-todo form .inputs .w-50 {
+    display: flex;
+    gap: 1.25rem;
+}
+
+@media (max-width: 650px) {
+    .create-todo form .inputs .w-50, .update-todo form .inputs .w-50 {
+        flex-direction: column;
+    }
+
+    .create-todo .priority > *, .update-todo .priority > * {
+        width: 100%;
+    }
+}
+
+.create-todo .date, .update-todo .date {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 100%;
+    z-index: 999;
+}
+
+.create-todo .date > *, .update-todo .date > * {
+    min-width: 100% !important;
+}
+
+.create-todo .priority, .update-todo .priority {
+    height: 100%;
+}
+
+.create-todo .error {
+    color: red;
+}

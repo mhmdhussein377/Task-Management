@@ -55,3 +55,16 @@ export const getCircularButtons = (toggleCompletedFn, openCreateTodoModalFn) => 
         handleClick: openCreateTodoModalFn
     }
 ];
+
+export const taskStatus = [
+    {
+        name: 'In progress',
+        value: 'in_progress'
+    }, {
+        name: 'Partial',
+        value: 'partial'
+    }, {
+        name: "Finished",
+        value: "finished"
+    }
+];
