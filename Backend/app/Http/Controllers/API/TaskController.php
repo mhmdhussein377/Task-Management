@@ -32,6 +32,7 @@ class TaskController extends Controller
             'description' => 'required|string',
             'due_date' => 'required|date',
             'status' => 'required|in:in_progress,finished,partial',
+            'assigned_to' => 'required|exists:users,id',
         ]);
 
         $task = Task::create([
@@ -39,6 +40,12 @@ class TaskController extends Controller
             'description' => $request->description,
             'due_date' => $request->due_date,
             'status' => $request->status,
+            'assigned_to' => $request->assigned_to,
+        ]);
+
+        TaskAssignment::create([
+            'task_id' => $task->id,
+            'user_id' => $request->assigned_to,
         ]);
 
         return response()->json(['message' => 'Task created successfully', 'task' => $task]);
