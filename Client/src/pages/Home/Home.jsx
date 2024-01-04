@@ -44,9 +44,14 @@ const Home = () => {
     const {logout, user} = useAuth();
 
     useEffect(() => {
+        let response
         const getTodos = async() => {
-            const response = await getRequest("/tasks");
-            setTodos(response.tasks);
+            if(user.role === "employer") {
+                response = await getRequest("/tasks");
+            } else if(user.role === "employee") {
+                response = await getRequest(`/tasks/assigned-to-employee/${user.id}`);
+            }
+            user.role === "employer" ? setTodos(response.tasks) : setTodos(response)
         };
 
         if (shouldFetchTodos) {
