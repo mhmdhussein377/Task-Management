@@ -123,4 +123,10 @@ class TaskController extends Controller
 
         return response()->json($employees);
     }
+
+    public function tasksAssignedToEmployee($employeeId)
+    {
+        $tasks = Task::where('assigned_to', $employeeId)->get();
+        return response()->json($tasks);
+    }
 }

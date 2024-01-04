@@ -15,6 +15,7 @@ Route::get('tasks/{id}', [TaskController::class, 'show']);
 Route::get('tasks/filter-by-due-date', [TaskController::class, 'filterByDueDate']);
 Route::get('tasks/filter-by-status', [TaskController::class, 'filterByStatus']);
 Route::post('tasks/{id}', [TaskController::class, 'update']);
+Route::get('tasks/assigned-to-employee/{employeeId}', [TaskController::class, 'tasksAssignedToEmployee']);
 
 Route::group(['middleware' => 'employer'], function () {
     Route::post('tasks', [TaskController::class, 'store']);
