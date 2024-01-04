@@ -70,8 +70,7 @@ const UpdateTodoModal = ({setIsUpdateTodoModalOpened, updatedTodo, setShouldFetc
                 .toISOString()
                 .slice(0, 19)
                 .replace("T", " ");
-            const response = await postRequest(`/tasks/${updatedTodo
-                ?.id}`, {
+            const response = await postRequest(`/tasks/${updatedTodo?.id}`, {
                 ...inputs,
                 due_date: formattedDate
             })
@@ -110,13 +109,13 @@ const UpdateTodoModal = ({setIsUpdateTodoModalOpened, updatedTodo, setShouldFetc
                             <label htmlFor="date">Date</label>
                             <DatePicker selected={inputs.due_date} onChange={handleDateChange}/>
                         </div>}
-                        <div className={`input-container priority ${user.role === "employee" && "full-status"}`}>
+                        {user.role === "employee" && <div className={`input-container priority ${user.role === "employee" && "full-status"}`}>
                             <label htmlFor="priority">Status</label>
                             <SelectSearch
                                 onChange={handleStatusChange}
                                 options={taskStatus}
                                 value={inputs.status}/>
-                        </div>
+                        </div>}
                     </div>
                 </div>
                 <Button content='Update'/>

@@ -98,3 +98,7 @@
     }
 
 }
+
+.status-filter {
+    z-index: 999;
+}
