@@ -1,21 +1,43 @@
-import { useRef, useState } from "react"
-import { postRequest } from "../../utils/requests"
-import { handleCloseModal } from "../../utils/closeModal";
+import {useEffect, useRef, useState} from "react"
+import {getRequest, postRequest} from "../../utils/requests"
+import {handleCloseModal} from "../../utils/closeModal";
 import Input from '../UI/Input/Input'
 import Button from "../UI/Button/Button";
-import { taskStatus } from "../../utils/constants";
+import {taskStatus} from "../../utils/constants";
 import DatePicker from "react-datepicker";
 import SelectSearch from "react-select-search"
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-select-search/style.css'
 import "./index.css"
+import SearchableDropdown from "../SearchableDropdown/SearchableDropdown";
+import {useAuth} from "../../Context/AuthContext";
 
 const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
 
     const [inputs,
         setInputs] = useState({title: "", description: "", due_date: new Date(), status: "in_progress"})
-    const [error, setError] = useState("")
+    const [error,
+        setError] = useState("")
+    const [value,
+        setValue] = useState("Select option...");
+    const [selectedEmployeeId,
+        setSelectedEmployeeId] = useState(null);
+    const [employees,
+        setEmployees] = useState([])
     const formRef = useRef(null)
+
+    console.log(employees, "emp")
+    console.log(selectedEmployeeId, "selected employee")
+
+    useEffect(() => {
+        const getEmployees = async() => {
+            const employees = await getRequest("/employees")
+            setEmployees(employees)
+        }
+        getEmployees()
+    }, [])
+
+    console.log(employees, 'employeeees')
 
     const handleChange = (name, value) => {
         setInputs(prev => ({
@@ -35,15 +57,7 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
     const handleCreateTodo = async(e) => {
         e.preventDefault()
 
-        if(!inputs.description) {
-            setError("description")
-            setTimeout(() => {
-                setError("")
-            }, 3000)
-            return
-        }
-
-        if(!inputs.title) {
+        if (!inputs.title) {
             setError("title")
             setTimeout(() => {
                 setError("")
@@ -51,12 +65,26 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
             return
         }
 
+        if (!inputs.description) {
+            setError("description")
+            setTimeout(() => {
+                setError("")
+            }, 3000)
+            return
+        }
+
+
         try {
 
-            const formattedDate = inputs.due_date.toISOString().slice(0, 19).replace("T", " ");
+            const formattedDate = inputs
+                .due_date
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", " ");
             const response = await postRequest("/tasks", {
                 ...inputs,
-                due_date: formattedDate,
+                assigned_to: selectedEmployeeId,
+                due_date: formattedDate
             })
 
             response && setShouldFetchTodos(true)
@@ -77,16 +105,14 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
                         name='title'
                         onChange={e => handleChange("title", e.target.value)}
                         value={inputs["title"]}
-                        placeholder='Enter a title'/>
-                    {error === "title" && <p className="error">Title is required</p>}
+                        placeholder='Enter a title'/> {error === "title" && <p className="error">Title is required</p>}
                     <Input
                         type='text'
                         label='Description'
                         name='description'
                         onChange={e => handleChange("description", e.target.value)}
                         value={inputs["description"]}
-                        placeholder='Enter a description'/>
-                    {error === "description" && <p className="error">Description is required</p>}
+                        placeholder='Enter a description'/> {error === "description" && <p className="error">Description is required</p>}
                     <div className="w-50">
                         <div className="input-container date">
                             <label htmlFor="date">Date</label>
@@ -99,6 +125,18 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
                                 options={taskStatus}
                                 value={inputs.status}/>
                         </div>
+                    </div>
+                    <div className="input-container">
+                        <label>Assign Employee</label>
+                        <SearchableDropdown
+                            options={employees}
+                            label="name"
+                            id="id"
+                            selectedVal={value}
+                            handleChange={(label, id) => {
+                            setValue(label);
+                            setSelectedEmployeeId(id);
+                        }}/>
                     </div>
                 </div>
                 <Button content='Create'/>

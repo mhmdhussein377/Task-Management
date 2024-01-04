@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\TaskAssignment;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -57,22 +59,33 @@ class TaskController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'due_date' => 'required|date',
-            'status' => 'required|in:in_progress,finished,partial',
         ]);
-
+    
         $task = Task::find($id);
-
+    
         if (!$task) {
             return response()->json(['message' => 'Task not found'], 404);
         }
 
-        $task->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'due_date' => $request->due_date,
-            'status' => $request->status,
-        ]);
-
+        $userRole = $request->user()->role;
+    
+        if ($userRole === 'employer') {
+            $task->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'due_date' => $request->due_date,
+            ]);
+        }
+        elseif ($userRole === 'employee') {
+            $request->validate([
+                'status' => 'required|in:in_progress,finished,partial',
+            ]);
+    
+            $task->update([
+                'status' => $request->status,
+            ]);
+        }
+    
         return response()->json(['message' => 'Task updated successfully', 'task' => $task]);
     }
 
@@ -103,5 +116,11 @@ class TaskController extends Controller
         $tasks = Task::where('status', $status)->get();
 
         return response()->json(['tasks' => $tasks]);
+    }
+
+    public function getEmployees() {
+        $employees = User::where('role', 'employee')->get(['id', 'name']);
+
+        return response()->json($employees);
     }
 }
