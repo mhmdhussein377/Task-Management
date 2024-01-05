@@ -1,4 +1,4 @@
-import {Fragment, useRef, useState} from 'react'
+import {Fragment, useEffect, useRef, useState} from 'react'
 import Input from '../UI/Input/Input'
 import DatePicker from "react-datepicker";
 import SelectSearch from "react-select-search"
@@ -8,26 +8,39 @@ import 'react-select-search/style.css'
 import Button from "../UI/Button/Button";
 import {taskStatus} from '../../utils/constants';
 import {handleCloseModal} from '../../utils/closeModal';
-import {postRequest} from '../../utils/requests';
+import {getRequest, postRequest} from '../../utils/requests';
 import {useAuth} from '../../Context/AuthContext';
 import "./index.css"
+import SearchableDropdown from '../SearchableDropdown/SearchableDropdown';
 
 const UpdateTodoModal = ({setIsUpdateTodoModalOpened, updatedTodo, setShouldFetchTodos}) => {
 
+    console.log(updatedTodo, "updatedTodo")
+
     const [inputs,
         setInputs] = useState({
-        title: updatedTodo
-            ?.title,
-        description: updatedTodo
-            ?.description,
+        title: updatedTodo?.title,
+        description: updatedTodo?.description,
         due_date: new Date(),
-        status: updatedTodo
-            ?.status
+        status: updatedTodo?.status
     })
-    const [error,
-        setError] = useState("")
+    const [error, setError] = useState("")
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+    const [employees, setEmployees] = useState([])
+    const [value, setValue] = useState("");
     const formRef = useRef(null)
     const {user} = useAuth()
+
+    console.log(value, "vaaa")
+
+    useEffect(() => {
+        const getEmployees = async() => {
+            const employees = await getRequest("/employees")
+            setEmployees(employees)
+            setValue(employees?.find(item => item.id === updatedTodo.assigned_to).name)
+        }
+        user.role === "employer" && getEmployees()
+    }, [])
 
     const handleChange = (name, value) => {
         setInputs(prev => ({
@@ -72,6 +85,7 @@ const UpdateTodoModal = ({setIsUpdateTodoModalOpened, updatedTodo, setShouldFetc
                 .replace("T", " ");
             const response = await postRequest(`/tasks/${updatedTodo?.id}`, {
                 ...inputs,
+                assigned_to: selectedEmployeeId,
                 due_date: formattedDate
             })
 
@@ -117,6 +131,18 @@ const UpdateTodoModal = ({setIsUpdateTodoModalOpened, updatedTodo, setShouldFetc
                                 value={inputs.status}/>
                         </div>}
                     </div>
+                    {user.role === "employer" && <div className="input-container">
+                        <label>Assign Employee</label>
+                        <SearchableDropdown
+                            options={employees}
+                            label="name"
+                            id="id"
+                            selectedVal={value}
+                            handleChange={(label, id) => {
+                            setValue(label);
+                            setSelectedEmployeeId(id);
+                        }}/>
+                    </div>}
                 </div>
                 <Button content='Update'/>
             </form>

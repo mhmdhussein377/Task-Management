@@ -26,9 +26,6 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
         setEmployees] = useState([])
     const formRef = useRef(null)
 
-    console.log(employees, "emp")
-    console.log(selectedEmployeeId, "selected employee")
-
     useEffect(() => {
         const getEmployees = async() => {
             const employees = await getRequest("/employees")
@@ -36,8 +33,6 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
         }
         getEmployees()
     }, [])
-
-    console.log(employees, 'employeeees')
 
     const handleChange = (name, value) => {
         setInputs(prev => ({
@@ -65,7 +60,7 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
             return
         }
 
-        if(!selectedEmployeeId) {
+        if (!selectedEmployeeId) {
             setError("employee")
             setTimeout(() => {
                 setError("")
@@ -129,7 +124,15 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
                             <label htmlFor="priority">Status</label>
                             <SelectSearch
                                 onChange={handleStatusChange}
-                                options={taskStatus}
+                                options={[
+                                {
+                                    name: 'In progress',
+                                    value: 'in_progress'
+                                }, {
+                                    name: 'Partial',
+                                    value: 'partial'
+                                }
+                            ]}
                                 value={inputs.status}/>
                         </div>
                     </div>

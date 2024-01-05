@@ -16,7 +16,7 @@ return new class extends Migration
             $table->enum('status', ['in_progress', 'finished', 'partial'])->default('in_progress');
             $table->timestamps();
 
-            $table->foreign('assigned_to')->references('id')->on('users');
+            
         });
     }
 
