@@ -115,6 +115,8 @@ const Home = () => {
             groupedTasks[dueDate].push(task);
         });
 
+        console.log(groupedTasks, "groupedTasksssss")
+
         return groupedTasks;
     };
 
@@ -151,7 +153,9 @@ const Home = () => {
                                 </h2>
                                 <h3>Add a new to-do and let the productivity party begin! 🚀</h3>
                             </div>
-                        : Object.entries(groupTasksByDate(todos)).map(([date, tasksForDate]) => (<Todos
+                        : Object.entries(groupTasksByDate(todos))
+                        .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
+                        .map(([date, tasksForDate]) => (<Todos
                             key={date}
                             date={date}
                             todos={tasksForDate}

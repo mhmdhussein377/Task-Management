@@ -65,6 +65,14 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
             return
         }
 
+        if(!selectedEmployeeId) {
+            setError("employee")
+            setTimeout(() => {
+                setError("")
+            }, 3000)
+            return
+        }
+
         if (!inputs.description) {
             setError("description")
             setTimeout(() => {
@@ -72,7 +80,6 @@ const CreateTodo = ({setIsCreateTodoModalOpened, setShouldFetchTodos}) => {
             }, 3000)
             return
         }
-
 
         try {
 
